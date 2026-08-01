@@ -3,7 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Roblox Lua Obfuscator Ultimate – 7 lớp bảo mật</title>
+  <title>Meoden Obfuscator - Bảo vệ Script Roblox Lua</title>
+  <meta name="description" content="Công cụ obfuscate script Roblox Lua miễn phí, 7 lớp bảo mật. Made By Meoden.">
+  <meta name="keywords" content="roblox, lua, obfuscator, script, bảo mật, meoden">
+  <meta name="author" content="Meoden">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://meoden.app">
+  <meta property="og:title" content="Meoden Obfuscator - Bảo vệ Script Roblox Lua">
+  <meta property="og:description" content="Công cụ obfuscate script Roblox Lua miễn phí, 7 lớp bảo mật.">
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://meoden.app">
+  <meta property="twitter:title" content="Meoden Obfuscator - Bảo vệ Script Roblox Lua">
+  <meta property="twitter:description" content="Công cụ obfuscate script Roblox Lua miễn phí, 7 lớp bảo mật.">
+  <link rel="canonical" href="https://meoden.app">
   <style>
     :root {
       --bg: #0b0b15;
@@ -23,7 +35,57 @@
       display: flex;
       justify-content: center;
       padding: 1.5rem;
+      position: relative;
+      min-height: 100vh;
     }
+
+    /* Nút góc màn hình */
+    .corner-buttons {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      display: flex;
+      gap: 0.5rem;
+      z-index: 1000;
+    }
+    .corner-btn {
+      background: var(--surface);
+      color: var(--text);
+      border: 1px solid rgba(255,255,255,0.1);
+      padding: 0.6rem 1rem;
+      border-radius: 25px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 600;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      backdrop-filter: blur(10px);
+      white-space: nowrap;
+    }
+    .corner-btn:hover {
+      background: var(--primary);
+      color: #0b0b15;
+      border-color: var(--primary);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(192,132,252,0.3);
+    }
+    .corner-btn.danger:hover {
+      background: var(--danger);
+      border-color: var(--danger);
+      box-shadow: 0 4px 15px rgba(248,113,113,0.3);
+    }
+    .corner-btn.success:hover {
+      background: #10b981;
+      border-color: #10b981;
+      box-shadow: 0 4px 15px rgba(16,185,129,0.3);
+    }
+    .corner-btn.lang-btn {
+      background: linear-gradient(135deg, var(--surface), #2d1b4e);
+      border-color: rgba(192,132,252,0.3);
+    }
+
     .app {
       width: 100%;
       max-width: 1200px;
@@ -37,6 +99,19 @@
       background: linear-gradient(135deg, var(--primary), #f472b6, var(--danger));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
+    }
+    .brand {
+      text-align: center;
+      font-size: 0.9rem;
+      color: var(--sub);
+    }
+    .brand a {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .brand a:hover {
+      text-decoration: underline;
     }
     .panel {
       background: var(--surface);
@@ -161,14 +236,22 @@
     }
     .signature-badge {
       text-align: center;
-      padding: 0.5rem 1rem;
+      padding: 0.8rem 1.5rem;
       background: linear-gradient(135deg, rgba(192,132,252,0.2), rgba(248,113,113,0.2));
+      border: 1px solid rgba(192,132,252,0.3);
       border-radius: var(--radius);
       font-weight: 700;
       color: var(--primary);
       letter-spacing: 1px;
       display: none;
       animation: fadeIn 0.5s ease;
+    }
+    .signature-badge a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    .signature-badge a:hover {
+      text-decoration: underline;
     }
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(-10px); }
@@ -180,22 +263,75 @@
       font-size: 0.8rem;
       margin-top: 0.5rem;
     }
+
+    /* Toast notification */
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #10b981;
+      color: white;
+      padding: 0.8rem 1.5rem;
+      border-radius: 25px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      z-index: 2000;
+      animation: slideUp 0.3s ease, fadeOut 0.3s ease 1.7s forwards;
+      box-shadow: 0 4px 15px rgba(16,185,129,0.4);
+    }
+    @keyframes slideUp {
+      from { transform: translateX(-50%) translateY(100px); opacity: 0; }
+      to { transform: translateX(-50%) translateY(0); opacity: 1; }
+    }
+    @keyframes fadeOut {
+      from { opacity: 1; }
+      to { opacity: 0; }
+    }
+
     @media (max-width: 700px) {
       .panel { flex-direction: column; }
+      h1 { font-size: 1.8rem; }
+      .corner-buttons {
+        top: 10px;
+        right: 10px;
+        flex-direction: column;
+        gap: 0.3rem;
+      }
+      .corner-btn {
+        padding: 0.5rem 0.8rem;
+        font-size: 0.75rem;
+      }
     }
   </style>
 </head>
 <body>
+
+<!-- NÚT GÓC MÀN HÌNH -->
+<div class="corner-buttons">
+  <button class="corner-btn danger" onclick="clearAll()" id="btnClear" title="Xoá tất cả">
+    🗑️ <span data-vi="Xoá" data-en="Clear">Xoá</span>
+  </button>
+  <button class="corner-btn success" onclick="copyOutput()" id="btnCopy" title="Sao chép">
+    📋 <span data-vi="Sao chép" data-en="Copy">Sao chép</span>
+  </button>
+  <button class="corner-btn lang-btn" onclick="toggleLanguage()" id="btnLang" title="Đổi ngôn ngữ">
+    🌐 <span data-vi="EN" data-en="VI">EN</span>
+  </button>
+</div>
+
 <div class="app">
-  <h1>🛡️ Roblox Lua Obfuscator Ultimate</h1>
-  <p style="text-align:center; color:var(--sub); margin-top:-0.5rem;">
-    7 lớp bảo vệ · Hỗ trợ tải file .lua từ máy
-  </p>
+  <h1>🛡️ Meoden Obfuscator</h1>
+  <div class="brand">
+    Made By <a href="https://dsc.gg/meoden" target="_blank">Meoden</a> | 
+    <a href="https://meoden.app" target="_blank">meoden.app</a>
+  </div>
+  <p style="text-align:center; color:var(--sub); margin-top:-0.5rem;" data-vi="7 lớp bảo vệ · Hỗ trợ tải file .lua từ máy · Miễn phí" data-en="7 protection layers · Support .lua file upload · Free">7 lớp bảo vệ · Hỗ trợ tải file .lua từ máy · Miễn phí</p>
 
   <!-- BẢNG ĐIỀU KHIỂN -->
   <div class="panel">
     <div class="slider-box">
-      <label>🔒 Mức bảo mật: <span id="levelValue">4</span>/7</label>
+      <label>🔒 <span data-vi="Mức bảo mật:" data-en="Security Level:">Mức bảo mật:</span> <span id="levelValue">4</span>/7</label>
       <input type="range" id="levelSlider" min="1" max="7" value="4" step="1">
       <div class="level-desc" id="levelDesc">Mức 4: Chuỗi + Đổi tên + Minify + Luồng phức tạp</div>
     </div>
@@ -203,15 +339,15 @@
       <!-- Checkboxes sẽ được tạo bằng JS -->
     </div>
     <div style="display:flex; gap:0.5rem;">
-      <button id="obfBtn">⚡ Obfuscate</button>
+      <button id="obfBtn">⚡ <span data-vi="Obfuscate" data-en="Obfuscate">Obfuscate</span></button>
     </div>
   </div>
 
   <!-- VÙNG SOẠN THẢO -->
   <div class="editors">
     <div class="editor">
-      <span class="label">📥 Script gốc</span>
-      <textarea id="inputCode" placeholder="Dán script Roblox Lua vào đây...">-- Ví dụ
+      <span class="label">📥 <span data-vi="Script gốc" data-en="Original Script">Script gốc</span></span>
+      <textarea id="inputCode" data-vi-placeholder="Dán script Roblox Lua vào đây..." data-en-placeholder="Paste your Roblox Lua script here...">-- Ví dụ
 local player = game.Players.LocalPlayer
 local msg = "Chào " .. player.Name
 local count = 10
@@ -219,29 +355,99 @@ if count > 5 then
   print(msg)
 end
 </textarea>
-      <!-- Nút chọn file và tên file -->
       <div class="file-area">
-        <button id="fileSelectBtn" class="file-btn">📂 Chọn file .lua</button>
+        <button id="fileSelectBtn" class="file-btn">📂 <span data-vi="Chọn file .lua" data-en="Select .lua file">Chọn file .lua</span></button>
         <input type="file" id="fileInput" accept=".lua,.txt,text/plain" style="display:none;">
         <span id="fileName"></span>
       </div>
     </div>
     <div class="editor">
-      <span class="label">📤 Script đã obfuscate</span>
-      <textarea id="outputCode" placeholder="Kết quả..." readonly></textarea>
+      <span class="label">📤 <span data-vi="Script đã obfuscate" data-en="Obfuscated Script">Script đã obfuscate</span></span>
+      <textarea id="outputCode" data-vi-placeholder="Kết quả..." data-en-placeholder="Result..." readonly></textarea>
     </div>
   </div>
   
-  <!-- Badge hiển thị khi obfuscate thành công -->
   <div class="signature-badge" id="signatureBadge">
-    ✅ Obfuscated Successfully | Made By Meoden | <a href="https://dsc.gg/meoden" target="_blank" style="color:var(--accent);">https://dsc.gg/meoden</a>
+    ✅ <span data-vi="Obfuscate thành công | Made By" data-en="Obfuscated Successfully | Made By">Obfuscate thành công | Made By</span> <a href="https://dsc.gg/meoden" target="_blank">Meoden</a> | <a href="https://meoden.app" target="_blank">meoden.app</a>
   </div>
   
-  <div class="footer">Mọi xử lý trên trình duyệt · Không gửi dữ liệu ra ngoài</div>
+  <div class="footer">
+    © 2024 Meoden Obfuscator | <span data-vi="Mọi xử lý trên trình duyệt · Không lưu trữ dữ liệu" data-en="All processing in browser · No data stored">Mọi xử lý trên trình duyệt · Không lưu trữ dữ liệu</span>
+  </div>
 </div>
 
 <script>
 (function() {
+  // ========== ĐA NGÔN NGỮ ==========
+  let currentLang = 'vi';
+  
+  const translations = {
+    levelDescs: {
+      vi: [
+        'Mức 1: Chỉ Minify',
+        'Mức 2: Minify + Đổi tên biến',
+        'Mức 3: Chuỗi + Đổi tên + Minify',
+        'Mức 4: + Luồng phức tạp',
+        'Mức 5: + Chống dịch ngược',
+        'Mức 6: + Mã hoá hằng số + Flatten + Opaque',
+        'Mức 7: Toàn bộ (Virtualization, Anti-Tamper)',
+        'Tuỳ chỉnh thủ công'
+      ],
+      en: [
+        'Level 1: Minify only',
+        'Level 2: Minify + Rename variables',
+        'Level 3: Strings + Rename + Minify',
+        'Level 4: + Junk flow',
+        'Level 5: + Anti-decompile',
+        'Level 6: + Constant obfuscation + Flatten + Opaque',
+        'Level 7: Full (Virtualization, Anti-Tamper)',
+        'Custom settings'
+      ]
+    },
+    layers: {
+      vi: ['Minify', 'Đổi tên biến', 'Mã hoá chuỗi', 'Luồng phức tạp', 'Chống dịch ngược', 'Mã hoá hằng số', 'Flatten Control Flow', 'Opaque Predicates', 'Anti-Tamper', 'Virtualization nhẹ'],
+      en: ['Minify', 'Rename variables', 'Encrypt strings', 'Junk flow', 'Anti-decompile', 'Obfuscate constants', 'Flatten Control Flow', 'Opaque Predicates', 'Anti-Tamper', 'Light Virtualization']
+    }
+  };
+
+  function updateLanguage(lang) {
+    currentLang = lang;
+    
+    // Cập nhật tất cả các element có data-vi và data-en
+    document.querySelectorAll('[data-vi][data-en]').forEach(el => {
+      el.textContent = el.getAttribute(`data-${lang}`);
+    });
+    
+    // Cập nhật placeholder cho textarea
+    const inputEl = document.getElementById('inputCode');
+    const outputEl = document.getElementById('outputCode');
+    inputEl.placeholder = inputEl.getAttribute(`data-${lang}-placeholder`);
+    outputEl.placeholder = outputEl.getAttribute(`data-${lang}-placeholder`);
+    
+    // Cập nhật nút ngôn ngữ
+    document.querySelector('#btnLang span').textContent = lang === 'vi' ? 'EN' : 'VI';
+    
+    // Cập nhật label cho checkboxes
+    LAYERS.forEach((layer, index) => {
+      const label = checkboxEls[layer.key].parentElement;
+      const textNode = label.childNodes[1]; // Text node sau checkbox
+      if (textNode) {
+        textNode.textContent = translations.layers[lang][index];
+      }
+    });
+    
+    // Cập nhật mô tả level
+    updateLevelDesc();
+    
+    // Lưu ngôn ngữ
+    localStorage.setItem('meoden-obf-lang', lang);
+  }
+
+  function toggleLanguage() {
+    const newLang = currentLang === 'vi' ? 'en' : 'vi';
+    updateLanguage(newLang);
+  }
+
   // ========== TỪ ĐIỂN & TIỆN ÍCH ==========
   const KEYWORDS = new Set(["and","break","do","else","elseif","end","false","for","function","goto","if","in","local","nil","not","or","repeat","return","then","true","until","while"]);
   const BUILTINS = new Set(["assert","collectgarbage","dofile","error","getfenv","getmetatable","ipairs","load","loadfile","loadstring","module","next","pairs","pcall","print","rawequal","rawget","rawset","require","select","setfenv","setmetatable","tonumber","tostring","type","unpack","xpcall","math","string","table","os","io","debug","coroutine","game","workspace","script","shared","plugin","Enum","utf8"]);
@@ -423,12 +629,10 @@ end _checkHash()`;
   }
 
   // ========== CHỮ KÝ MEODEN ==========
-  const SIGNATURE_COMMENT = '--[[ Made By Meoden | https://dsc.gg/meoden ]]';
-  const SIGNATURE_STRING = '-- Made By Meoden | https://dsc.gg/meoden';
+  const SIGNATURE = '--[[ Made By Meoden | https://dsc.gg/meoden | https://meoden.app ]]';
 
   function addSignature(code) {
-    // Thêm chữ ký vào đầu script dưới dạng comment
-    return SIGNATURE_COMMENT + '\n' + code;
+    return SIGNATURE + '\n' + code;
   }
 
   // ========== OBFUSCATE CHÍNH ==========
@@ -445,7 +649,6 @@ end _checkHash()`;
     if (options.antiTamper) r = antiTamper(r);
     if (options.virt) r = lightVirtualization(r);
     
-    // Thêm chữ ký Meoden vào script đã obfuscate
     r = addSignature(r);
     
     return r;
@@ -488,16 +691,6 @@ end _checkHash()`;
     7: ['minify','rename','encryptStrings','junkFlow','antiDecomp','constObf','cfFlatten','opaque','antiTamper','virt'],
   };
 
-  const levelDescs = [
-    'Mức 1: Chỉ Minify',
-    'Mức 2: Minify + Đổi tên biến',
-    'Mức 3: Chuỗi + Đổi tên + Minify',
-    'Mức 4: + Luồng phức tạp',
-    'Mức 5: + Chống dịch ngược',
-    'Mức 6: + Mã hoá hằng số + Flatten + Opaque',
-    'Mức 7: Toàn bộ (Virtualization, Anti-Tamper)',
-  ];
-
   // Tạo checkboxes
   const checkboxEls = {};
   LAYERS.forEach(layer => {
@@ -525,11 +718,20 @@ end _checkHash()`;
     keys.forEach(key => { if (checkboxEls[key]) checkboxEls[key].checked = true; });
   }
 
+  function updateLevelDesc() {
+    const level = parseInt(levelSlider.value);
+    if (level >= 1 && level <= 7) {
+      levelDescSpan.textContent = translations.levelDescs[currentLang][level - 1];
+    } else {
+      levelDescSpan.textContent = translations.levelDescs[currentLang][7];
+    }
+  }
+
   function updateUIFromLevel(level) {
     const keys = levelPresets[level] || [];
     setCheckboxesFromPreset(keys);
     levelValueSpan.textContent = level;
-    levelDescSpan.textContent = levelDescs[level-1] || '';
+    updateLevelDesc();
   }
 
   levelSlider.addEventListener('input', () => {
@@ -550,7 +752,7 @@ end _checkHash()`;
     }
     levelSlider.value = 0;
     levelValueSpan.textContent = '?';
-    levelDescSpan.textContent = 'Tuỳ chỉnh thủ công';
+    updateLevelDesc();
   }
 
   Object.values(checkboxEls).forEach(cb => {
@@ -561,14 +763,24 @@ end _checkHash()`;
     signatureBadge.style.display = 'block';
     setTimeout(() => {
       signatureBadge.style.display = 'none';
-    }, 5000); // Ẩn sau 5 giây
+    }, 5000);
+  }
+
+  function showToast(message) {
+    const toast = document.createElement('div');
+    toast.className = 'toast';
+    toast.textContent = message;
+    document.body.appendChild(toast);
+    setTimeout(() => {
+      toast.remove();
+    }, 2000);
   }
 
   obfBtn.addEventListener('click', () => {
     const src = inputEl.value.trim();
     if (!src) {
       outputEl.value = '';
-      alert('Vui lòng nhập script Lua cần obfuscate!');
+      alert(currentLang === 'vi' ? '⚠️ Vui lòng nhập script Lua cần obfuscate!' : '⚠️ Please enter a Lua script to obfuscate!');
       return;
     }
     
@@ -576,10 +788,8 @@ end _checkHash()`;
     const result = obfuscate(src, opts);
     outputEl.value = result;
     
-    // Hiển thị badge thành công
     showSignatureBadge();
     
-    // Thêm hiệu ứng nhấp nháy cho nút
     obfBtn.style.transform = 'scale(1.1)';
     setTimeout(() => {
       obfBtn.style.transform = 'scale(1)';
@@ -598,15 +808,13 @@ end _checkHash()`;
     const reader = new FileReader();
     reader.onload = (ev) => {
       inputEl.value = ev.target.result;
-      // Tự động obfuscate sau khi tải file
       obfBtn.click();
     };
     reader.readAsText(file);
-    // Reset input file để có thể chọn lại cùng file nếu muốn
     fileInput.value = '';
   });
 
-  // Vẫn giữ kéo thả
+  // Kéo thả file
   inputEl.addEventListener('dragover', e => e.preventDefault());
   inputEl.addEventListener('drop', e => {
     e.preventDefault();
@@ -622,7 +830,39 @@ end _checkHash()`;
     }
   });
 
-  // Khởi tạo mức 4
+  // ========== HÀM TOÀN CỤC ==========
+  window.clearAll = function() {
+    inputEl.value = '';
+    outputEl.value = '';
+    fileNameSpan.textContent = '';
+    signatureBadge.style.display = 'none';
+    updateUIFromLevel(4);
+    levelSlider.value = 4;
+    showToast(currentLang === 'vi' ? '🗑️ Đã xoá tất cả!' : '🗑️ All cleared!');
+  };
+
+  window.copyOutput = function() {
+    const output = outputEl.value;
+    if (!output.trim()) {
+      alert(currentLang === 'vi' ? '⚠️ Không có gì để sao chép! Hãy obfuscate trước.' : '⚠️ Nothing to copy! Please obfuscate first.');
+      return;
+    }
+    
+    navigator.clipboard.writeText(output).then(() => {
+      showToast(currentLang === 'vi' ? '📋 Đã sao chép vào clipboard!' : '📋 Copied to clipboard!');
+    }).catch(() => {
+      // Fallback cho trình duyệt cũ
+      outputEl.select();
+      document.execCommand('copy');
+      showToast(currentLang === 'vi' ? '📋 Đã sao chép!' : '📋 Copied!');
+    });
+  };
+
+  window.toggleLanguage = toggleLanguage;
+
+  // Khởi tạo
+  const savedLang = localStorage.getItem('meoden-obf-lang') || 'vi';
+  updateLanguage(savedLang);
   updateUIFromLevel(4);
 })();
 </script>
