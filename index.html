@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Roblox Lua Obfuscator Ultimate – 7 lớp bảo mật</title>
+  <style>
+    :root {
+      --bg: #0b0b15;
+      --surface: #16162a;
+      --primary: #c084fc;
+      --accent: #38bdf8;
+      --danger: #f87171;
+      --text: #e2e8f0;
+      --sub: #94a3b8;
+      --radius: 14px;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', system-ui, sans-serif;
+      display: flex;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+    .app {
+      width: 100%;
+      max-width: 1200px;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    h1 {
+      text-align: center;
+      font-size: 2.5rem;
+      background: linear-gradient(135deg, var(--primary), #f472b6, var(--danger));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .panel {
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      align-items: flex-end;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+    .slider-box {
+      flex: 2;
+      min-width: 200px;
+    }
+    .slider-box label {
+      font-weight: 600;
+      color: var(--sub);
+      display: block;
+      margin-bottom: 0.3rem;
+    }
+    .level-desc {
+      font-size: 0.9rem;
+      color: var(--accent);
+      margin-top: 0.3rem;
+    }
+    input[type=range] {
+      width: 100%;
+      accent-color: var(--primary);
+    }
+    .checks {
+      flex: 4;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem 1.2rem;
+    }
+    .checks label {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      cursor: pointer;
+      color: var(--text);
+      font-size: 0.85rem;
+    }
+    .checks input[type=checkbox] {
+      accent-color: var(--primary);
+      width: 16px; height: 16px;
+    }
+    button {
+      background: var(--primary);
+      color: #0b0b15;
+      font-weight: 700;
+      padding: 0.8rem 2rem;
+      border: none;
+      border-radius: var(--radius);
+      cursor: pointer;
+      font-size: 1rem;
+      transition: .2s;
+      white-space: nowrap;
+    }
+    button:hover {
+      filter: brightness(1.2);
+      transform: translateY(-2px);
+    }
+    .file-btn {
+      background: #2d2d4a;
+      color: var(--text);
+      margin-left: 0.5rem;
+    }
+    .file-btn:hover {
+      background: #3b3b5c;
+    }
+    .editors {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .editor {
+      flex: 1 1 400px;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+    textarea {
+      width: 100%;
+      height: 500px;
+      background: #0d0d1a;
+      border: 2px solid #2d2d4a;
+      color: #cbd5e1;
+      padding: 1rem;
+      border-radius: var(--radius);
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+      font-size: 0.9rem;
+      line-height: 1.6;
+      resize: vertical;
+      transition: border .2s;
+    }
+    textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+    .label {
+      font-weight: 600;
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .file-area {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 0.3rem;
+    }
+    #fileName {
+      color: var(--sub);
+      font-size: 0.9rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 200px;
+    }
+    .signature-badge {
+      text-align: center;
+      padding: 0.5rem 1rem;
+      background: linear-gradient(135deg, rgba(192,132,252,0.2), rgba(248,113,113,0.2));
+      border-radius: var(--radius);
+      font-weight: 700;
+      color: var(--primary);
+      letter-spacing: 1px;
+      display: none;
+      animation: fadeIn 0.5s ease;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .footer {
+      text-align: center;
+      color: #555;
+      font-size: 0.8rem;
+      margin-top: 0.5rem;
+    }
+    @media (max-width: 700px) {
+      .panel { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+  <h1>🛡️ Roblox Lua Obfuscator Ultimate</h1>
+  <p style="text-align:center; color:var(--sub); margin-top:-0.5rem;">
+    7 lớp bảo vệ · Hỗ trợ tải file .lua từ máy
+  </p>
+
+  <!-- BẢNG ĐIỀU KHIỂN -->
+  <div class="panel">
+    <div class="slider-box">
+      <label>🔒 Mức bảo mật: <span id="levelValue">4</span>/7</label>
+      <input type="range" id="levelSlider" min="1" max="7" value="4" step="1">
+      <div class="level-desc" id="levelDesc">Mức 4: Chuỗi + Đổi tên + Minify + Luồng phức tạp</div>
+    </div>
+    <div class="checks" id="checkContainer">
+      <!-- Checkboxes sẽ được tạo bằng JS -->
+    </div>
+    <div style="display:flex; gap:0.5rem;">
+      <button id="obfBtn">⚡ Obfuscate</button>
+    </div>
+  </div>
+
+  <!-- VÙNG SOẠN THẢO -->
+  <div class="editors">
+    <div class="editor">
+      <span class="label">📥 Script gốc</span>
+      <textarea id="inputCode" placeholder="Dán script Roblox Lua vào đây...">-- Ví dụ
+local player = game.Players.LocalPlayer
+local msg = "Chào " .. player.Name
+local count = 10
+if count > 5 then
+  print(msg)
+end
+</textarea>
+      <!-- Nút chọn file và tên file -->
+      <div class="file-area">
+        <button id="fileSelectBtn" class="file-btn">📂 Chọn file .lua</button>
+        <input type="file" id="fileInput" accept=".lua,.txt,text/plain" style="display:none;">
+        <span id="fileName"></span>
+      </div>
+    </div>
+    <div class="editor">
+      <span class="label">📤 Script đã obfuscate</span>
+      <textarea id="outputCode" placeholder="Kết quả..." readonly></textarea>
+    </div>
+  </div>
+  
+  <!-- Badge hiển thị khi obfuscate thành công -->
+  <div class="signature-badge" id="signatureBadge">
+    ✅ Obfuscated Successfully | Made By Meoden | <a href="https://dsc.gg/meoden" target="_blank" style="color:var(--accent);">https://dsc.gg/meoden</a>
+  </div>
+  
+  <div class="footer">Mọi xử lý trên trình duyệt · Không gửi dữ liệu ra ngoài</div>
+</div>
+
+<script>
+(function() {
+  // ========== TỪ ĐIỂN & TIỆN ÍCH ==========
+  const KEYWORDS = new Set(["and","break","do","else","elseif","end","false","for","function","goto","if","in","local","nil","not","or","repeat","return","then","true","until","while"]);
+  const BUILTINS = new Set(["assert","collectgarbage","dofile","error","getfenv","getmetatable","ipairs","load","loadfile","loadstring","module","next","pairs","pcall","print","rawequal","rawget","rawset","require","select","setfenv","setmetatable","tonumber","tostring","type","unpack","xpcall","math","string","table","os","io","debug","coroutine","game","workspace","script","shared","plugin","Enum","utf8"]);
+
+  function tokenize(code) {
+    const tokens = [];
+    let i = 0, len = code.length;
+    const isDigit = c => c>='0'&&c<='9';
+    const isAlpha = c => (c>='a'&&c<='z')||(c>='A'&&c<='Z')||c==='_';
+    const isSpace = c => c===' '||c==='\t'||c==='\r'||c==='\n';
+    while (i < len) {
+      if (isSpace(code[i])) { let s=i; while(i<len&&isSpace(code[i]))i++; tokens.push({type:'space',value:code.slice(s,i)}); continue; }
+      if (code[i]==='-' && code[i+1]==='-') { let s=i; i+=2;
+        if (code[i]==='['&&code[i+1]==='['){ i+=2; let d=1; while(i<len&&d>0){ if(code[i]===']'&&code[i+1]===']'){d--;i+=2;}else if(code[i]==='['&&code[i+1]==='['){d++;i+=2;}else i++; } }
+        else { while(i<len&&code[i]!=='\n')i++; } tokens.push({type:'comment',value:code.slice(s,i)}); continue; }
+      if (code[i]==='"'||code[i]==="'"||code[i]==='[') {
+        const q=code[i]; if(q==='['&&(code[i+1]==='['||code[i+1]==='=')){ let s=i; i++; let eq=0; while(i<len&&code[i]==='='){eq++;i++;}
+          if(code[i]==='['){ i++; const close=']'+'='.repeat(eq)+']'; while(i<len&&!code.slice(i).startsWith(close))i++; if(i<len)i+=close.length; }
+          tokens.push({type:'string',value:code.slice(s,i)}); } else { let s=i; i++; while(i<len){ if(code[i]==='\\'&&i+1<len)i+=2; else if(code[i]===q){i++;break;} else i++; } tokens.push({type:'string',value:code.slice(s,i)}); } continue;
+      }
+      if (isDigit(code[i]) || (code[i]==='.'&&i+1<len&&isDigit(code[i+1]))) { let s=i; if(code[i]==='0'&&(code[i+1]==='x'||code[i+1]==='X')){ i+=2; while(i<len&&/[0-9a-fA-F.]/.test(code[i]))i++; } else { while(i<len&&(isDigit(code[i])||code[i]==='.'||code[i]==='e'||code[i]==='E'))i++; } tokens.push({type:'number',value:code.slice(s,i)}); continue; }
+      if (isAlpha(code[i])) { let s=i; while(i<len&&(isAlpha(code[i])||isDigit(code[i])))i++; const w=code.slice(s,i); tokens.push({type:KEYWORDS.has(w)?'keyword':'identifier',value:w}); continue; }
+      const two=code.slice(i,i+2); if(['..','>=','<=','==','~=','::','//','<<','>>'].includes(two)){ tokens.push({type:'op',value:two});i+=2; } else { tokens.push({type:'op',value:code[i]});i++; }
+    }
+    return tokens;
+  }
+
+  // ========== 1. MINIFY ==========
+  function minify(code) {
+    const tokens = tokenize(code);
+    let out='', prev=null;
+    for(const t of tokens) {
+      if(t.type==='space'||t.type==='comment') { if(prev==='identifier'||prev==='number'||prev==='keyword'||prev==='string') out+=' '; continue; }
+      out+=t.value; prev=t.type;
+    }
+    return out.replace(/\s+/g,' ').trim();
+  }
+
+  // ========== 2. RENAME LOCALS ==========
+  function renameAllLocals(code) {
+    const localRegex = /\blocal\s+(function\s+)?([a-zA-Z_]\w*)(\s*,\s*[a-zA-Z_]\w*)*/g;
+    let nameMap=new Map(), counter=0;
+    const rndName=i=>{const c='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';let s='';let n=i;do{s=c[n%c.length]+s;n=Math.floor(n/c.length);}while(n>0);return'_'+s;};
+    let decls=[], match;
+    const regex=new RegExp(localRegex.source,'g');
+    while((match=regex.exec(code))!==null){
+      const full=match[0], isFunc=full.startsWith('local function');
+      const varPart=full.replace(/^local\s+(function\s+)?/,'').trim();
+      const names=varPart.split(',').map(s=>s.trim());
+      for(const n of names){ if(!nameMap.has(n)) nameMap.set(n,rndName(counter++)); }
+      decls.push({start:match.index,end:match.index+full.length,names,isFunc});
+    }
+    if(nameMap.size===0)return code;
+    decls.sort((a,b)=>b.start-a.start);
+    let result=code;
+    for(const d of decls){
+      const before=result.slice(0,d.start), after=result.slice(d.end);
+      const newNames=d.names.map(n=>nameMap.get(n)).join(', ');
+      const prefix=d.isFunc?'local function ':'local ';
+      let replacement=prefix+newNames;
+      const origDecl=result.slice(d.start,d.end);
+      const eqIdx=origDecl.indexOf('=');
+      if(eqIdx!==-1&&!d.isFunc) replacement+=' '+origDecl.slice(eqIdx);
+      else if(d.isFunc){ const afterName=origDecl.slice(origDecl.indexOf(d.names[0])+d.names[0].length); replacement+=afterName; }
+      result=before+replacement+after;
+    }
+    const tokens=tokenize(result); let out='';
+    for(const t of tokens){ if(t.type==='identifier'&&nameMap.has(t.value)) out+=nameMap.get(t.value); else out+=t.value; }
+    return out;
+  }
+
+  // ========== 3. MÃ HOÁ CHUỖI (XOR) ==========
+  function encryptStrings(code) {
+    const tokens=tokenize(code);
+    const key=Math.floor(Math.random()*200)+50;
+    const fname='_D'+Math.random().toString(36).substr(2,6);
+    let out='';
+    for(const t of tokens){
+      if(t.type==='string'){
+        let inner='';
+        if(t.value[0]==='"'||t.value[0]==="'") inner=t.value.slice(1,-1);
+        else if(t.value.startsWith('[[')) inner=t.value.slice(2,-2);
+        else { const m=t.value.match(/^\[(=*)\[(.*?)\]\1\]$/s); inner=m?m[2]:t.value.slice(1,-1); }
+        const enc=Array.from(inner).map(c=>String.fromCharCode(c.charCodeAt(0)^key)).join('');
+        const bytes=Array.from(enc).map(c=>'\\'+c.charCodeAt(0).toString()).join('');
+        out+=fname+'("'+bytes+'",'+key+')';
+      } else out+=t.value;
+    }
+    return 'local function '+fname+'(s,k)local r=""for i=1,#s do r=r..string.char(s:byte(i)~k)end return r end '+out;
+  }
+
+  // ========== 4. LUỒNG PHỨC TẠP (JUNK CODE) ==========
+  function injectJunkFlow(code) {
+    const lines=code.split('\n'); let res=[];
+    const junk=[
+      'while false do end ',
+      'if 0==1 then print("never") end ',
+      'local _'+Math.random().toString(36).substr(2,4)+'=0;_'+'=1; ',
+      'do local x=1;x=x+1;end ',
+      'if nil then else end ',
+    ];
+    for(let i=0;i<lines.length;i++){ res.push(lines[i]); if(lines[i].trim()&&Math.random()<0.4) res.push(junk[Math.floor(Math.random()*junk.length)]); }
+    return res.join('\n');
+  }
+
+  // ========== 5. CHỐNG DỊCH NGƯỢC ==========
+  function antiDecompile(code) {
+    return 'local _anti=function()if debug then debug.setconstant=nil;debug.getupvalue=nil end end _anti() --[['+'\n'+code+'\n--]]';
+  }
+
+  // ========== 6. MÃ HOÁ HẰNG SỐ ==========
+  function obfuscateConstants(code) {
+    const tokens=tokenize(code); let out='';
+    for(const t of tokens){
+      if(t.type==='number'){ const v=parseFloat(t.value); if(isNaN(v))out+=t.value; else{const a=Math.floor(Math.random()*100);out+='('+a+'+'+(v-a)+')';} }
+      else if(t.type==='keyword'&&(t.value==='true'||t.value==='false')) out+=t.value==='true'?'(not nil)':'(nil)';
+      else out+=t.value;
+    }
+    return out;
+  }
+
+  // ========== 7. CONTROL FLOW FLATTENING ==========
+  function flattenControlFlow(code) {
+    const lines = code.split('\n').filter(l => l.trim() !== '');
+    if (lines.length < 3) return code;
+    let output = 'local _state=0 ';
+    output += 'local _blocks={';
+    for (let i = 0; i < lines.length; i++) {
+      const escaped = lines[i].replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+      output += '['+i+']=function() ' + escaped + ' end,';
+    }
+    output += '} ';
+    output += 'while _state~= -1 do _blocks[_state]();_state=_state+1;if _state>=#'+'blocks then _state=-1 end end ';
+    return '--[[CFLATTEN]] ' + output;
+  }
+
+  // ========== 8. OPAQUE PREDICATES ==========
+  function injectOpaquePredicates(code) {
+    const preds = [
+      'if (math.sqrt(2)^2==2) then ',
+      'if (#({1,2,3})==3) then ',
+      'if (string.byte("A")==65) then ',
+    ];
+    const pred = preds[Math.floor(Math.random()*preds.length)];
+    return pred + code + ' end';
+  }
+
+  // ========== 9. ANTI-TAMPER ==========
+  function antiTamper(code) {
+    const hashFunc = `
+local function _checkHash()
+  local s=[[${code}]]
+  local h=0; for i=1,#s do h=h+string.byte(s,i) end
+  if h~=${code.split('').reduce((a,b)=>a+b.charCodeAt(0),0)} then while true do end end
+end _checkHash()`;
+    return hashFunc + '\n' + code;
+  }
+
+  // ========== 10. VIRTUALIZATION NHẸ ==========
+  function lightVirtualization(code) {
+    const lines = code.split('\n');
+    const newLines = [];
+    const virtFuncName = '_V'+Math.random().toString(36).substr(2,4);
+    let virtDefined = false;
+    for (let line of lines) {
+      const match = line.match(/^\s*local\s+([a-zA-Z_]\w*)\s*=\s*([a-zA-Z_]\w*)\s*([+\-*/])\s*([a-zA-Z_]\w*)\s*$/);
+      if (match) {
+        if (!virtDefined) {
+          newLines.push(`local function ${virtFuncName}(a,op,b) if op=='+' then return a+b elseif op=='-' then return a-b elseif op=='*' then return a*b elseif op=='/' then return a/b end end`);
+          virtDefined = true;
+        }
+        const varName = match[1], left = match[2], op = match[3], right = match[4];
+        newLines.push(`local ${varName} = ${virtFuncName}(${left},'${op}',${right})`);
+      } else {
+        newLines.push(line);
+      }
+    }
+    return newLines.join('\n');
+  }
+
+  // ========== CHỮ KÝ MEODEN ==========
+  const SIGNATURE_COMMENT = '--[[ Made By Meoden | https://dsc.gg/meoden ]]';
+  const SIGNATURE_STRING = '-- Made By Meoden | https://dsc.gg/meoden';
+
+  function addSignature(code) {
+    // Thêm chữ ký vào đầu script dưới dạng comment
+    return SIGNATURE_COMMENT + '\n' + code;
+  }
+
+  // ========== OBFUSCATE CHÍNH ==========
+  function obfuscate(src, options) {
+    let r = src;
+    if (options.minify) r = minify(r);
+    if (options.rename) r = renameAllLocals(r);
+    if (options.encryptStrings) r = encryptStrings(r);
+    if (options.junkFlow) r = injectJunkFlow(r);
+    if (options.antiDecomp) r = antiDecompile(r);
+    if (options.constObf) r = obfuscateConstants(r);
+    if (options.cfFlatten) r = flattenControlFlow(r);
+    if (options.opaque) r = injectOpaquePredicates(r);
+    if (options.antiTamper) r = antiTamper(r);
+    if (options.virt) r = lightVirtualization(r);
+    
+    // Thêm chữ ký Meoden vào script đã obfuscate
+    r = addSignature(r);
+    
+    return r;
+  }
+
+  // ========== GIAO DIỆN ==========
+  const inputEl = document.getElementById('inputCode');
+  const outputEl = document.getElementById('outputCode');
+  const obfBtn = document.getElementById('obfBtn');
+  const levelSlider = document.getElementById('levelSlider');
+  const levelValueSpan = document.getElementById('levelValue');
+  const levelDescSpan = document.getElementById('levelDesc');
+  const checkContainer = document.getElementById('checkContainer');
+  const fileInput = document.getElementById('fileInput');
+  const fileSelectBtn = document.getElementById('fileSelectBtn');
+  const fileNameSpan = document.getElementById('fileName');
+  const signatureBadge = document.getElementById('signatureBadge');
+
+  // Danh sách các lớp
+  const LAYERS = [
+    { key: 'minify', label: 'Minify', default: true },
+    { key: 'rename', label: 'Đổi tên biến', default: false },
+    { key: 'encryptStrings', label: 'Mã hoá chuỗi', default: false },
+    { key: 'junkFlow', label: 'Luồng phức tạp', default: false },
+    { key: 'antiDecomp', label: 'Chống dịch ngược', default: false },
+    { key: 'constObf', label: 'Mã hoá hằng số', default: false },
+    { key: 'cfFlatten', label: 'Flatten Control Flow', default: false },
+    { key: 'opaque', label: 'Opaque Predicates', default: false },
+    { key: 'antiTamper', label: 'Anti-Tamper', default: false },
+    { key: 'virt', label: 'Virtualization nhẹ', default: false },
+  ];
+
+  const levelPresets = {
+    1: ['minify'],
+    2: ['minify','rename'],
+    3: ['minify','rename','encryptStrings'],
+    4: ['minify','rename','encryptStrings','junkFlow'],
+    5: ['minify','rename','encryptStrings','junkFlow','antiDecomp'],
+    6: ['minify','rename','encryptStrings','junkFlow','antiDecomp','constObf','cfFlatten','opaque'],
+    7: ['minify','rename','encryptStrings','junkFlow','antiDecomp','constObf','cfFlatten','opaque','antiTamper','virt'],
+  };
+
+  const levelDescs = [
+    'Mức 1: Chỉ Minify',
+    'Mức 2: Minify + Đổi tên biến',
+    'Mức 3: Chuỗi + Đổi tên + Minify',
+    'Mức 4: + Luồng phức tạp',
+    'Mức 5: + Chống dịch ngược',
+    'Mức 6: + Mã hoá hằng số + Flatten + Opaque',
+    'Mức 7: Toàn bộ (Virtualization, Anti-Tamper)',
+  ];
+
+  // Tạo checkboxes
+  const checkboxEls = {};
+  LAYERS.forEach(layer => {
+    const label = document.createElement('label');
+    const cb = document.createElement('input');
+    cb.type = 'checkbox';
+    cb.id = 'chk'+layer.key;
+    cb.checked = layer.default;
+    label.appendChild(cb);
+    label.appendChild(document.createTextNode(layer.label));
+    checkContainer.appendChild(label);
+    checkboxEls[layer.key] = cb;
+  });
+
+  function getOptions() {
+    const opts = {};
+    for (const [key, el] of Object.entries(checkboxEls)) {
+      opts[key] = el.checked;
+    }
+    return opts;
+  }
+
+  function setCheckboxesFromPreset(keys) {
+    Object.values(checkboxEls).forEach(cb => cb.checked = false);
+    keys.forEach(key => { if (checkboxEls[key]) checkboxEls[key].checked = true; });
+  }
+
+  function updateUIFromLevel(level) {
+    const keys = levelPresets[level] || [];
+    setCheckboxesFromPreset(keys);
+    levelValueSpan.textContent = level;
+    levelDescSpan.textContent = levelDescs[level-1] || '';
+  }
+
+  levelSlider.addEventListener('input', () => {
+    const lvl = parseInt(levelSlider.value);
+    updateUIFromLevel(lvl);
+  });
+
+  function syncSlider() {
+    const current = getOptions();
+    const activeKeys = Object.keys(current).filter(k => current[k]);
+    for (let lvl = 1; lvl <= 7; lvl++) {
+      const preset = levelPresets[lvl];
+      if (activeKeys.length === preset.length && preset.every(k => activeKeys.includes(k))) {
+        levelSlider.value = lvl;
+        updateUIFromLevel(lvl);
+        return;
+      }
+    }
+    levelSlider.value = 0;
+    levelValueSpan.textContent = '?';
+    levelDescSpan.textContent = 'Tuỳ chỉnh thủ công';
+  }
+
+  Object.values(checkboxEls).forEach(cb => {
+    cb.addEventListener('change', syncSlider);
+  });
+
+  function showSignatureBadge() {
+    signatureBadge.style.display = 'block';
+    setTimeout(() => {
+      signatureBadge.style.display = 'none';
+    }, 5000); // Ẩn sau 5 giây
+  }
+
+  obfBtn.addEventListener('click', () => {
+    const src = inputEl.value.trim();
+    if (!src) {
+      outputEl.value = '';
+      alert('Vui lòng nhập script Lua cần obfuscate!');
+      return;
+    }
+    
+    const opts = getOptions();
+    const result = obfuscate(src, opts);
+    outputEl.value = result;
+    
+    // Hiển thị badge thành công
+    showSignatureBadge();
+    
+    // Thêm hiệu ứng nhấp nháy cho nút
+    obfBtn.style.transform = 'scale(1.1)';
+    setTimeout(() => {
+      obfBtn.style.transform = 'scale(1)';
+    }, 200);
+  });
+
+  // Xử lý nút chọn file
+  fileSelectBtn.addEventListener('click', () => {
+    fileInput.click();
+  });
+
+  fileInput.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    fileNameSpan.textContent = file.name;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      inputEl.value = ev.target.result;
+      // Tự động obfuscate sau khi tải file
+      obfBtn.click();
+    };
+    reader.readAsText(file);
+    // Reset input file để có thể chọn lại cùng file nếu muốn
+    fileInput.value = '';
+  });
+
+  // Vẫn giữ kéo thả
+  inputEl.addEventListener('dragover', e => e.preventDefault());
+  inputEl.addEventListener('drop', e => {
+    e.preventDefault();
+    const file = e.dataTransfer.files[0];
+    if (file && (file.name.endsWith('.lua') || file.type.startsWith('text/'))) {
+      fileNameSpan.textContent = file.name;
+      const reader = new FileReader();
+      reader.onload = ev => { 
+        inputEl.value = ev.target.result; 
+        obfBtn.click(); 
+      };
+      reader.readAsText(file);
+    }
+  });
+
+  // Khởi tạo mức 4
+  updateUIFromLevel(4);
+})();
+</script>
+</body>
+</html>
