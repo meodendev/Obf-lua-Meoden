@@ -45,8 +45,8 @@ Professional web-based obfuscator for Roblox Lua scripts with AST-based transfor
 ### Development
 ```bash
 # Clone repository
-git clone https://github.com/yourusername/lua-obfuscator-web.git
-cd lua-obfuscator-web
+git clone https://github.com/meodendev/Obf-lua-Meoden.git
+cd Obf-lua-Meoden
 
 # Install dependencies
 cd backend && npm install
